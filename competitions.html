@@ -55,10 +55,16 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.3rem,4vw,2.2rem);font-wei
 .lcat{font-family:'Orbitron';font-weight:700;font-size:.84rem;margin:.9rem 0 .4rem;padding:.45rem .7rem;border-radius:8px;}
 .lcat.basic{color:var(--accent);background:rgba(0,212,255,.1);}
 .lcat.advanced{color:#ff6b7a;background:rgba(255,71,87,.1);}
-.llist{margin:0 0 .4rem 1.4rem;}
-.llist li{padding:.22rem 0;font-size:.92rem;}
 .lage{font-family:'Space Mono';font-size:.64rem;color:var(--muted);}
 .lempty{color:var(--muted);font-size:.82rem;margin-left:1rem;}
+.ltable{display:flex;flex-direction:column;gap:.3rem;margin:.3rem 0 .5rem;}
+.lrow{display:flex;align-items:center;gap:.6rem;padding:.4rem .55rem;border-radius:8px;background:rgba(255,255,255,.03);}
+.lrk{font-family:'Orbitron';font-weight:900;width:24px;text-align:center;color:var(--muted);flex-shrink:0;}
+.lrk.r1{color:var(--gold);}.lrk.r2{color:var(--silver);}.lrk.r3{color:var(--bronze);}
+.lnm{font-family:'Orbitron';font-weight:700;font-size:.9rem;min-width:0;}
+.lsub{font-family:'Space Mono';font-size:.68rem;color:var(--muted);font-weight:400;margin-top:.2rem;}
+.lmiss{color:var(--accent2);font-weight:700;}
+.ldone{color:var(--green);}
 
 /* TABS */
 .tabs{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-bottom:1.4rem;}
@@ -542,14 +548,32 @@ function renderAll(){
 /* ===== LISTE DE VÉRIFICATION (nombre + noms par catégorie) ===== */
 function openList(){renderList();document.getElementById('listModal').classList.add('on');}
 function closeList(){document.getElementById('listModal').classList.remove('on');}
+// matchs joués / total selon l'épreuve
+function matchInfo(c,t){
+  if(c==='suiveur'){const p=(t.m||[]).filter(m=>m&&((m.p!==''&&m.p!=null)||(m.t!==''&&m.t!=null))).length;return {p,tot:3};}
+  if(c==='vitesse'){const p=(t.e||[]).filter(x=>x&&num(x.t)>0).length;return {p,tot:2};}
+  return {p:num(t.v)+num(t.n)+num(t.d),tot:null};   // sumo : nb de combats joués
+}
+function shortStat(c,t){
+  if(c==='suiveur')return `${s_pts(t)} pts · ${fmt(s_chr(t))}`;
+  if(c==='vitesse')return `${fmt(v_best(t))} · dossier ${num(t.dossier)}/110`;
+  return `${sumo_pts(t)} pts (${num(t.v)}V ${num(t.n)}N ${num(t.d)}D)`;
+}
 function renderList(){
   const c=active,list=state[c];
-  let html=`<h3>${META[c].icon} ${esc(META[c].label)}</h3><div class="ltotal">Total : <b>${list.length}</b> équipe(s)</div>`;
-  CATS.forEach(cat=>{
-    const teams=list.filter(t=>(t.cat||'Basic')===cat).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
-    html+=`<div class="lcat ${cat==='Advanced'?'advanced':'basic'}">${cat==='Advanced'?'🟥':'🟦'} ${cat} — ${teams.length} équipe(s)</div>`;
-    if(!teams.length)html+=`<div class="lempty">— aucune équipe —</div>`;
-    else html+='<ol class="llist">'+teams.map(t=>`<li>${esc(t.name)} <span class="lage">${esc(t.age||'')}</span></li>`).join('')+'</ol>';
+  let html=`<h3>${META[c].icon} ${esc(META[c].label)}</h3><div class="ltotal">Total : <b>${list.length}</b> équipe(s) · classement en temps réel</div>`;
+  const gs=groups(list);
+  if(!gs.length)html+='<div class="lempty">— aucune équipe —</div>';
+  gs.forEach(g=>{
+    const cls=g.cat==='Advanced'?'advanced':'basic',icon=g.cat==='Advanced'?'🟥':'🟦';
+    html+=`<div class="lcat ${cls}">${icon} ${esc(g.cat)} · ${esc(g.age)} — ${g.list.length} équipe(s)</div><div class="ltable">`;
+    g.list.forEach((t,i)=>{
+      const mi=matchInfo(c,t);let mt,miss='';
+      if(mi.tot){mt=`${mi.p}/${mi.tot} matchs`;const mk=mi.tot-mi.p;miss=mk>0?`<span class="lmiss">⚠ ${mk} manquant${mk>1?'s':''}</span>`:`<span class="ldone">✓ complet</span>`;}
+      else{mt=`${mi.p} combat${mi.p>1?'s':''} joué${mi.p>1?'s':''}`;}
+      html+=`<div class="lrow"><span class="lrk ${i<3?'r'+(i+1):''}">${i+1}</span><div class="lnm">${esc(t.name)} <span class="lage">${esc(t.age||'')}</span><div class="lsub">${mt} ${miss} · <b>${shortStat(c,t)}</b></div></div></div>`;
+    });
+    html+='</div>';
   });
   document.getElementById('listBody').innerHTML=html;
 }
@@ -582,7 +606,7 @@ COMPS.forEach(c=>{
   rdb.ref(c).on('value',snap=>{
     const v=snap.val()||{};
     state[c]=Object.keys(v).map(id=>Object.assign({id},v[id]));
-    if(c===active){renderAll();if(document.getElementById('display').classList.contains('on'))renderDisplay();}
+    if(c===active){renderAll();if(document.getElementById('display').classList.contains('on'))renderDisplay();if(document.getElementById('listModal').classList.contains('on'))renderList();}
   },err=>console.error('RTDB '+c+':',err));
 });
 document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
