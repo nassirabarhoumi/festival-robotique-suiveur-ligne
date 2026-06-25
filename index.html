@@ -9,7 +9,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Classement"/>
 <meta name="format-detection" content="telephone=no"/>
-<link rel="manifest" href='data:application/manifest+json,{"name":"Classement Suiveur de Ligne","short_name":"Classement","start_url":".","display":"standalone","background_color":"%230a0e1a","theme_color":"%230a0e1a","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect width=%22192%22 height=%22192%22 fill=%22%230a0e1a%22/%3E%3Ctext y=%22130%22 x=%2296%22 font-size=%22110%22 text-anchor=%22middle%22%3E%F0%9F%8F%81%3C/text%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"}]}'/>
 <title>Classement — Suiveur de Ligne | Festival de Robotique 1.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
@@ -37,6 +36,28 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,4vw,2.4rem);font-wei
 .sub{color:var(--muted);font-size:.85rem;}
 
 .wrap{max-width:1150px;margin:0 auto;padding:1.6rem 1rem 4rem;}
+
+/* AUTH BAR + MODAL */
+.authbar{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;align-items:center;margin:0 auto 1.2rem;font-family:'Space Mono';font-size:.82rem;}
+.ab-on{color:var(--green);} .ab-off{color:var(--muted);}
+.ab-btn{font-family:'Orbitron';font-weight:700;font-size:.72rem;cursor:pointer;border-radius:8px;padding:.45rem .9rem;
+  border:1px solid var(--accent);background:rgba(0,212,255,.12);color:var(--accent);transition:.2s;}
+.ab-btn:hover{background:var(--accent);color:#0a0e1a;}
+.ab-btn.out{border-color:var(--muted);color:var(--muted);background:transparent;}
+.ab-btn.out:hover{border-color:var(--red);color:var(--red);}
+.modal{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;background:rgba(5,8,16,.8);backdrop-filter:blur(4px);}
+.modal.on{display:flex;}
+.modal-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.8rem;width:min(92vw,360px);box-shadow:0 20px 60px rgba(0,0,0,.6);}
+.modal-card h3{font-family:'Orbitron';margin-bottom:1rem;color:var(--accent);}
+.modal-card input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.7rem .8rem;border-radius:8px;font-size:16px;margin-bottom:.7rem;font-family:'Exo 2';}
+.modal-card input:focus{outline:none;border-color:var(--accent);}
+.loginerr{color:var(--red);font-size:.78rem;min-height:1.1rem;margin-bottom:.6rem;font-family:'Space Mono';}
+.modal-btns{display:flex;gap:.6rem;}
+.modal-btns button{flex:1;font-family:'Orbitron';font-weight:700;font-size:.78rem;cursor:pointer;border-radius:8px;padding:.7rem;}
+.m-login{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;border:none;}
+.m-cancel{background:transparent;border:1px solid var(--muted);color:var(--muted);}
+/* mode public (lecture seule) : on masque tout ce qui modifie */
+body.readonly .ref-only{display:none!important;}
 
 /* CONTROLS */
 .controls{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;justify-content:center;margin-bottom:1.6rem;}
@@ -118,8 +139,6 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,4vw,2.4rem);font-wei
 
 /* SETTINGS BAR */
 .settings{display:flex;flex-wrap:wrap;gap:1.2rem;justify-content:center;align-items:center;margin-bottom:1.4rem;font-size:.82rem;color:var(--muted);}
-.settings label{display:flex;align-items:center;gap:.45rem;cursor:pointer;}
-.settings select{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:.4rem .6rem;border-radius:8px;font-family:'Space Mono';font-size:.8rem;}
 
 /* CATEGORY BLOCKS */
 .catblock{margin-bottom:2.8rem;}
@@ -179,6 +198,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,4vw,2.4rem);font-wei
 .matchcell input{width:54px;background:var(--bg);border:1px solid var(--border);color:var(--text);
   text-align:center;padding:.35rem .2rem;border-radius:6px;font-family:'Space Mono';font-size:.78rem;}
 .matchcell input:focus{outline:none;border-color:var(--accent);}
+.matchcell input[readonly]{opacity:.6;border-color:rgba(255,255,255,.08);cursor:default;}
 .matchcell .lbl{font-size:.58rem;color:var(--muted);font-family:'Space Mono';width:26px;text-align:right;}
 .timerbtn{background:var(--bg3);border:1px solid var(--border);color:var(--accent);cursor:pointer;border-radius:5px;width:24px;height:24px;font-size:.7rem;padding:0;}
 .timerbtn.run{background:var(--red);color:#fff;border-color:var(--red);animation:pulse 1s infinite;}
@@ -196,7 +216,6 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,4vw,2.4rem);font-wei
 .btn-edit:hover{background:rgba(0,212,255,.15);}
 .del{background:transparent;border:1px solid transparent;color:var(--muted);cursor:pointer;font-size:1.1rem;border-radius:6px;width:30px;height:30px;}
 .del:hover{color:var(--red);border-color:rgba(255,71,87,.4);}
-/* Mini-formulaire d'édition */
 .edit-name{width:100%;max-width:220px;background:var(--bg);border:1px solid var(--accent);color:var(--text);
   padding:.45rem .55rem;border-radius:6px;font-family:'Exo 2';font-size:.92rem;}
 .edit-name:focus{outline:none;box-shadow:0 0 0 3px rgba(0,212,255,.15);}
@@ -236,29 +255,31 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,4vw,2.4rem);font-wei
 }
 </style>
 </head>
-<body>
+<body class="readonly">
 <header>
   <img src="logo.png" class="logo" alt="Les Petits Génies de la Robotique"/>
   <div class="kicker">FESTIVAL DE ROBOTIQUE 1.0 — LES PETITS GÉNIES</div>
   <h1>🏁 Classement Suiveur de Ligne</h1>
-  <div class="sub">Saisie des scores en temps réel · 3 matchs · classement automatique</div>
+  <div class="sub">Synchronisé en temps réel · 3 matchs · classement automatique</div>
 </header>
 
 <div class="wrap">
+  <div id="authbar" class="authbar"></div>
+
   <div class="controls">
-    <input type="text" id="teamInput" placeholder="Nom de l'équipe…" maxlength="28" autocomplete="off"/>
-    <select id="catInput" class="ctrl-select" title="Catégorie">
+    <input type="text" id="teamInput" class="ref-only" placeholder="Nom de l'équipe…" maxlength="28" autocomplete="off"/>
+    <select id="catInput" class="ctrl-select ref-only" title="Catégorie">
       <option value="Basic">🟦 Basic</option>
       <option value="Advanced">🟥 Advanced</option>
     </select>
-    <select id="ageInput" class="ctrl-select" title="Tranche d'âge">
+    <select id="ageInput" class="ctrl-select ref-only" title="Tranche d'âge">
       <option value="Benjamin (≤9 ans)">Benjamin (≤9 ans)</option>
       <option value="Junior (10–13 ans)">Junior (10–13 ans)</option>
       <option value="Senior (14–18 ans)">Senior (14–18 ans)</option>
     </select>
-    <button class="btn btn-add" onclick="addTeam()">➕ AJOUTER L'ÉQUIPE</button>
+    <button class="btn btn-add ref-only" onclick="addTeam()">➕ AJOUTER L'ÉQUIPE</button>
     <button class="btn btn-show" onclick="openDisplay()">📺 AFFICHAGE CLASSEMENT</button>
-    <button class="btn btn-ghost" onclick="resetAll()">🗑 TOUT EFFACER</button>
+    <button class="btn btn-ghost ref-only" onclick="resetAll()">🗑 TOUT EFFACER</button>
   </div>
 
   <div class="settings">
@@ -269,13 +290,24 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,4vw,2.4rem);font-wei
   <div id="empty"></div>
 
   <div class="note">
-    💾 Les données sont enregistrées automatiquement dans ce navigateur.<br>
-    Pour chaque match : saisissez les <code>points</code> et le <code>chrono</code> (en secondes), ou utilisez
-    le bouton <code>▶</code> pour lancer/arrêter le chronomètre intégré.<br>
-    ✅ Cliquez sur <code>✓ Valider</code> pour confirmer la saisie d'une équipe : <b>le classement (tri + podium) ne se met à jour qu'après validation</b>. Une ligne orange = saisie non encore validée.<br>
-    🏆 Le classement retient le <code>meilleur match</code> de chaque équipe (max 15 pts) — <b>pas de cumul</b>.
-    On compare d'abord le score ; à score égal (ex. plusieurs équipes à 15/15), c'est le <code>chrono de ce meilleur match</code> qui départage (le plus rapide devant).
-    Un robot rapide mais sans le meilleur score ne peut donc pas être 1er.
+    ☁️ <b>Données synchronisées en temps réel</b> entre tous les appareils. Le public voit le classement en <b>lecture seule</b> ; seuls les <b>arbitres connectés</b> peuvent modifier.<br>
+    Pour chaque match : saisissez les <code>points</code> et le <code>chrono</code> (en secondes), ou utilisez le bouton <code>▶</code> pour le chronomètre intégré.<br>
+    ✅ Cliquez sur <code>✓ Valider</code> pour confirmer la saisie d'une équipe : <b>le classement ne se met à jour qu'après validation</b>. Une ligne orange = saisie non validée.<br>
+    🏆 Le classement retient le <code>meilleur match</code> (max 15 pts, pas de cumul) : meilleur score d'abord, puis le <code>chrono de ce meilleur match</code> à égalité.
+  </div>
+</div>
+
+<!-- MODALE DE CONNEXION ARBITRE -->
+<div id="loginModal" class="modal">
+  <div class="modal-card">
+    <h3>🔐 Connexion arbitre</h3>
+    <input id="loginEmail" type="email" placeholder="Email" autocomplete="username"/>
+    <input id="loginPass" type="password" placeholder="Mot de passe" autocomplete="current-password"/>
+    <div id="loginErr" class="loginerr"></div>
+    <div class="modal-btns">
+      <button class="m-login" onclick="doLogin()">Se connecter</button>
+      <button class="m-cancel" onclick="closeLogin()">Annuler</button>
+    </div>
   </div>
 </div>
 
@@ -294,46 +326,93 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,4vw,2.4rem);font-wei
   </div>
 </div>
 
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
 <script>
-const KEY='lpg_classement_v1';
+/* ===== CONFIG FIREBASE (projet festival-robotique-2026) ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyAaUsubgDY6r4s5kZ1g-HNGu01zf5MGQwg",
+  authDomain: "festival-robotique-2026.firebaseapp.com",
+  databaseURL: "https://festival-robotique-2026-default-rtdb.firebaseio.com",
+  projectId: "festival-robotique-2026",
+  storageBucket: "festival-robotique-2026.firebasestorage.app",
+  messagingSenderId: "943782180523",
+  appId: "1:943782180523:web:19bd7d8cbecc9fc5e5a9ee",
+  measurementId: "G-RLQMT5J4M9"
+};
+firebase.initializeApp(firebaseConfig);
+const rdb = firebase.database();
+const auth = firebase.auth();
+
 let state={teams:[]};
-let timers={};        // {teamId_match: {start, raf}}
-let drafts={};        // saisies non validées
+let timers={};        // {teamId_match:{start,raf}}
+let drafts={};        // saisies non validées (local, par arbitre)
+let isRef=false;      // arbitre connecté ?
+let currentEmail='';
 const CATS=['Basic','Advanced'];
+const AGES=['Benjamin (≤9 ans)','Junior (10–13 ans)','Senior (14–18 ans)'];
 
-function load(){
-  try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&d.teams){state={teams:d.teams};}}catch(e){}
+/* ===== AUTH ===== */
+function openLogin(){document.getElementById('loginModal').classList.add('on');document.getElementById('loginEmail').focus();}
+function closeLogin(){document.getElementById('loginModal').classList.remove('on');document.getElementById('loginErr').textContent='';document.getElementById('loginPass').value='';}
+function doLogin(){
+  const e=document.getElementById('loginEmail').value.trim();
+  const p=document.getElementById('loginPass').value;
+  const err=document.getElementById('loginErr');
+  err.textContent='Connexion…';
+  auth.signInWithEmailAndPassword(e,p)
+    .then(()=>closeLogin())
+    .catch(ex=>{
+      const map={'auth/invalid-email':'Email invalide.','auth/missing-password':'Entrez le mot de passe.',
+        'auth/invalid-credential':'Email ou mot de passe incorrect.','auth/wrong-password':'Mot de passe incorrect.',
+        'auth/user-not-found':'Aucun compte avec cet email.','auth/too-many-requests':'Trop d\'essais, réessayez plus tard.'};
+      err.textContent='⛔ '+(map[ex.code]||ex.message);
+    });
 }
-function save(){
-  try{localStorage.setItem(KEY,JSON.stringify(state));}
-  catch(e){alert('Stockage du navigateur plein (photos trop lourdes ou trop d\'équipes). La dernière modification n\'a peut-être pas été enregistrée.');}
+function doLogout(){ if(confirm('Se déconnecter ?')) auth.signOut(); }
+function renderAuthBar(){
+  const bar=document.getElementById('authbar');
+  if(isRef){
+    bar.innerHTML=`<span class="ab-on">✅ Arbitre connecté : ${esc(currentEmail)}</span> <button class="ab-btn out" onclick="doLogout()">Déconnexion</button>`;
+  }else{
+    bar.innerHTML=`<span class="ab-off">👁 Mode public — lecture seule</span> <button class="ab-btn" onclick="openLogin()">🔐 Connexion arbitre</button>`;
+  }
 }
-function uid(){return 't'+Math.floor(performance.now()*1000)+Math.floor(Math.random()*9999);}
 
+/* ===== MUTATIONS (écrites dans Firestore) ===== */
 function addTeam(){
+  if(!isRef){openLogin();return;}
   const inp=document.getElementById('teamInput');
-  const name=inp.value.trim();
-  if(!name)return;
+  const name=inp.value.trim(); if(!name)return;
   const cat=document.getElementById('catInput').value;
   const age=document.getElementById('ageInput').value;
-  state.teams.push({id:uid(),name,cat,age,m:[{p:'',t:''},{p:'',t:''},{p:'',t:''}]});
-  inp.value='';save();render();
+  inp.value='';
+  rdb.ref('teams').push({name,cat,age,photo:null,
+    m:[{p:'',t:''},{p:'',t:''},{p:'',t:''}],order:Date.now()})
+    .catch(e=>alert('Erreur ajout : '+e.message));
 }
 function delTeam(id){
+  if(!isRef)return;
   const t=state.teams.find(x=>x.id===id);
   if(t && !confirm('Supprimer l\'équipe "'+t.name+'" ?'))return;
   delete drafts[id];
-  state.teams=state.teams.filter(x=>x.id!==id);save();render();
+  state.teams=state.teams.filter(x=>x.id!==id); renderAll();   // optimiste
+  rdb.ref('teams/'+id).remove().catch(e=>alert('Erreur suppression : '+e.message));
 }
 function resetAll(){
+  if(!isRef)return;
   if(!confirm('Effacer TOUTES les équipes et tous les scores ?'))return;
-  drafts={};state.teams=[];save();render();
+  drafts={};
+  rdb.ref('teams').remove().catch(e=>alert('Erreur : '+e.message));
 }
 
-/* ===== MODIFIER UNE ÉQUIPE (nom / catégorie / âge) ===== */
-const AGES=['Benjamin (≤9 ans)','Junior (10–13 ans)','Senior (14–18 ans)'];
+/* ===== MODIFIER (nom / catégorie / âge) ===== */
 function ageOptions(sel){return AGES.map(a=>`<option value="${a}"${a===sel?' selected':''}>${a}</option>`).join('');}
 function editTeam(id){
+  if(!isRef)return;
   const t=state.teams.find(x=>x.id===id); if(!t)return;
   const cell=document.getElementById('name_'+id); if(!cell)return;
   cell.innerHTML=`
@@ -355,34 +434,38 @@ function editTeam(id){
   ni.addEventListener('keydown',e=>{if(e.key==='Enter')saveTeam(id);if(e.key==='Escape')renderAll();});
 }
 function saveTeam(id){
+  if(!isRef)return;
   const t=state.teams.find(x=>x.id===id); if(!t)return;
   const name=document.getElementById('en_'+id).value.trim();
   if(!name){alert('Le nom ne peut pas être vide.');return;}
-  t.name=name;
-  t.cat=document.getElementById('ec_'+id).value;
-  t.age=document.getElementById('ea_'+id).value;
-  save(); renderAll();
+  const cat=document.getElementById('ec_'+id).value;
+  const age=document.getElementById('ea_'+id).value;
+  t.name=name;t.cat=cat;t.age=age; renderAll();                 // optimiste
+  rdb.ref('teams/'+id).update({name,cat,age}).catch(e=>alert('Erreur : '+e.message));
 }
 
-/* ===== PHOTO D'ÉQUIPE ===== */
+/* ===== PHOTO ===== */
 function avatarInner(t){return t.photo?`<img src="${t.photo}" alt="${esc(t.name)}">`:`<span class="aph">📷</span>`;}
 function pickPhoto(id){
+  if(!isRef)return;
   const inp=document.createElement('input');
   inp.type='file'; inp.accept='image/*';
   inp.onchange=()=>{
     const f=inp.files&&inp.files[0]; if(!f)return;
     resizeImage(f,240,url=>{
       const t=state.teams.find(x=>x.id===id); if(!t)return;
-      t.photo=url; save(); renderAll();
+      t.photo=url; renderAll();                                 // optimiste
+      rdb.ref('teams/'+id).update({photo:url}).catch(e=>alert('Erreur photo : '+e.message));
     });
   };
   inp.click();
 }
 function removePhoto(id){
+  if(!isRef)return;
   const t=state.teams.find(x=>x.id===id); if(!t)return;
-  t.photo=null; save(); renderAll();
+  t.photo=null; renderAll();
+  rdb.ref('teams/'+id).update({photo:null}).catch(e=>alert('Erreur : '+e.message));
 }
-// Réduit la photo (carré max) pour tenir dans le stockage du navigateur
 function resizeImage(file,max,cb){
   const reader=new FileReader();
   reader.onload=e=>{
@@ -410,6 +493,7 @@ function ensureDraft(id){
   return drafts[id];
 }
 function editVal(id,mi,field,val){
+  if(!isRef)return;
   if(field==='p' && val!==''){ let n=num(val); if(n>15)val='15'; if(n<0)val='0'; }
   const d=ensureDraft(id); d[mi][field]=val;
   markDirty(id); updateRowTotals(id);
@@ -425,12 +509,14 @@ function updateRowTotals(id){
   if(tc)tc.textContent=fmt(bestChrono(src));
 }
 function validateTeam(id){
+  if(!isRef)return;
   const d=drafts[id], t=state.teams.find(x=>x.id===id);
-  if(d&&t){ t.m=d.map(m=>({p:m.p,t:m.t})); }
-  delete drafts[id];
-  save();
-  renderRankingOnly();                 // ← le classement se met à jour ICI
-  if(document.getElementById('display').classList.contains('on')) renderDisplay();
+  if(d&&t){
+    const m=d.map(x=>({p:x.p,t:x.t}));
+    t.m=m; delete drafts[id]; renderAll();                      // optimiste
+    rdb.ref('teams/'+id).update({m}).catch(e=>alert('Erreur : '+e.message));
+    if(document.getElementById('display').classList.contains('on')) renderDisplay();
+  }
 }
 function applyDrafts(){
   Object.keys(drafts).forEach(id=>{
@@ -445,11 +531,9 @@ function applyDrafts(){
 
 /* ===== CALCULS ===== */
 function num(v){const n=parseFloat(v);return isNaN(n)?0:n;}
-// Meilleur MATCH : score le plus haut, et à score égal le chrono le plus rapide.
-// Le chrono retenu est TOUJOURS celui du match où l'équipe a fait son meilleur score.
 function bestRun(t){
   let best={p:-1,c:Infinity};
-  t.m.forEach(m=>{
+  (t.m||[]).forEach(m=>{
     const p=num(m.p);
     const cc=num(m.t); const c=cc>0?cc:Infinity;
     if(p>best.p || (p===best.p && c<best.c)) best={p,c};
@@ -465,26 +549,22 @@ function fmt(sec){
 }
 function cmpTeams(a,b){
   const pa=bestPoints(a), pb=bestPoints(b);
-  if(pb!==pa)return pb-pa;                  // 1) meilleur score
+  if(pb!==pa)return pb-pa;
   const cA=bestChrono(a)===null?Infinity:bestChrono(a);
   const cB=bestChrono(b)===null?Infinity:bestChrono(b);
-  return cA-cB;                             // 2) à égalité → meilleur chrono (du même match)
-}
-function rankedCat(cat){
-  return state.teams.filter(t=>(t.cat||'Basic')===cat).sort(cmpTeams);
+  return cA-cB;
 }
 
-/* ===== RENDU (un tableau indépendant par catégorie) ===== */
+/* ===== RENDU ===== */
 function render(){renderAll();}
-function renderRankingOnly(){renderAll();}   // alias (appelé après validation/chrono)
+function renderRankingOnly(){renderAll();}
 function tagsHtml(t){
   return `<div class="tags"><span class="tag-cat ${t.cat||'Basic'}">${esc(t.cat||'Basic')}</span>`+
     (t.age?`<span class="tag-age">${esc(t.age)}</span>`:'')+`</div>`;
 }
-
 function theadHtml(){
   return `<span>#</span><span class="l">Équipe</span><span>Match 1</span><span>Match 2</span><span>Match 3</span>`+
-         `<span>Me. Score</span><span>Me. Chrono</span><span>Valider</span>`;
+         `<span>Me. Score</span><span>Me. Chrono</span><span>${isRef?'Valider':''}</span>`;
 }
 function podiumHtml(list){
   const medals=['🥇','🥈','🥉'],cls=['pod1','pod2','pod3'];
@@ -502,38 +582,45 @@ function podiumHtml(list){
 }
 function rowHtml(t,idx){
   const rk=idx+1;
+  const ro=isRef?'':'readonly';
   let cells='';
   for(let i=0;i<3;i++){
     const running=timers[t.id+'_'+i];
+    const tbtn=isRef?`<button class="timerbtn ${running?'run':''}" title="Chrono" onclick="toggleTimer('${t.id}',${i})">${running?'⏹':'▶'}</button>`:'';
     cells+=`<div class="matchcell" data-m="Match ${i+1}">
       <div class="pts"><span class="lbl">pts</span>
-        <input type="number" min="0" max="15" step="1" id="pts_${t.id}_${i}" value="${t.m[i].p}" placeholder="0"
+        <input type="number" min="0" max="15" step="1" id="pts_${t.id}_${i}" value="${t.m[i].p}" placeholder="0" ${ro}
           oninput="editVal('${t.id}',${i},'p',this.value)"></div>
       <div class="chr"><span class="lbl">sec</span>
-        <input type="number" min="0" step="0.01" id="chr_${t.id}_${i}" value="${t.m[i].t}" placeholder="0"
+        <input type="number" min="0" step="0.01" id="chr_${t.id}_${i}" value="${t.m[i].t}" placeholder="0" ${ro}
           oninput="editVal('${t.id}',${i},'t',this.value)">
-        <button class="timerbtn ${running?'run':''}" title="Chrono" onclick="toggleTimer('${t.id}',${i})">${running?'⏹':'▶'}</button>
+        ${tbtn}
       </div></div>`;
   }
+  const avatar=isRef
+    ? `<button class="avatar" onclick="pickPhoto('${t.id}')" title="Ajouter / changer la photo">${avatarInner(t)}</button>`
+    : `<div class="avatar">${avatarInner(t)}</div>`;
+  const actions=isRef
+    ? `<div class="actions">
+        <button class="btn-val" id="val_${t.id}" title="Valider et mettre à jour le classement" onclick="validateTeam('${t.id}')" disabled>✓ Valider</button>
+        <div class="act-icons">
+          <button class="btn-edit" title="Modifier nom / catégorie / âge" onclick="editTeam('${t.id}')">✎</button>
+          <button class="del" title="Supprimer" onclick="delTeam('${t.id}')">✕</button>
+        </div>
+      </div>`
+    : `<div class="actions"></div>`;
   return `<div class="row" id="row_${t.id}">
     <div class="rank ${rk<=3?'r'+rk:''}">${rk}</div>
     <div class="teamname" id="name_${t.id}"><div class="tcontent">
-      <button class="avatar" onclick="pickPhoto('${t.id}')" title="Ajouter / changer la photo">${avatarInner(t)}</button>
+      ${avatar}
       <div class="tmeta"><span class="tn">${esc(t.name)}</span>${tagsHtml(t)}</div>
     </div></div>
     ${cells}
     <div class="total" id="tp_${t.id}">${bestPoints(t)}</div>
     <div class="totchr" id="tc_${t.id}">${fmt(bestChrono(t))}</div>
-    <div class="actions">
-      <button class="btn-val" id="val_${t.id}" title="Valider et mettre à jour le classement" onclick="validateTeam('${t.id}')" disabled>✓ Valider</button>
-      <div class="act-icons">
-        <button class="btn-edit" title="Modifier nom / catégorie / âge" onclick="editTeam('${t.id}')">✎</button>
-        <button class="del" title="Supprimer" onclick="delTeam('${t.id}')">✕</button>
-      </div>
-    </div>
+    ${actions}
   </div>`;
 }
-// Regroupe les équipes par (catégorie + tranche d'âge), triées, dans l'ordre CATS × AGES.
 function groups(){
   const map={};
   state.teams.forEach(t=>{const k=(t.cat||'Basic')+'||'+(t.age||'—');(map[k]=map[k]||[]).push(t);});
@@ -558,9 +645,11 @@ function groupBlock(g){
 function renderAll(){
   const cont=document.getElementById('cats');
   const empty=document.getElementById('empty');
+  if(!cont)return;
   if(state.teams.length===0){
     cont.innerHTML='';
-    empty.innerHTML='<div class="empty"><div class="big">🤖</div>Aucune équipe pour le moment.<br>Ajoutez votre première équipe ci-dessus !</div>';
+    empty.innerHTML='<div class="empty"><div class="big">🤖</div>Aucune équipe pour le moment.'+
+      (isRef?'<br>Ajoutez votre première équipe ci-dessus !':'<br>En attente des arbitres…')+'</div>';
     return;
   }
   empty.innerHTML='';
@@ -569,15 +658,16 @@ function renderAll(){
 }
 
 function toggleTimer(id,mi){
+  if(!isRef)return;
   const k=id+'_'+mi;
-  if(timers[k]){ // stop
+  if(timers[k]){
     const elapsed=(performance.now()-timers[k].start)/1000;
     cancelAnimationFrame(timers[k].raf);
     delete timers[k];
     const ce=document.getElementById('chr_'+k); if(ce)ce.value=elapsed.toFixed(2);
-    editVal(id,mi,'t',elapsed.toFixed(2));   // → en attente de validation
+    editVal(id,mi,'t',elapsed.toFixed(2));
     const b=document.getElementById('val_'+id); if(b)b.classList.add('pending');
-  }else{ // start
+  }else{
     timers[k]={start:performance.now(),raf:0};
     const tick=()=>{
       if(!timers[k])return;
@@ -592,7 +682,7 @@ function toggleTimer(id,mi){
 
 /* ===== AFFICHAGE FINAL ===== */
 function openDisplay(){
-  if(state.teams.length===0){alert('Ajoutez au moins une équipe avant l\'affichage.');return;}
+  if(state.teams.length===0){alert('Aucune équipe à afficher pour le moment.');return;}
   buildConfetti();
   renderDisplay();
   document.getElementById('display').classList.add('on');
@@ -635,11 +725,25 @@ function renderDisplay(){
   document.getElementById('drows').innerHTML=html;
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDisplay();});
-
 function esc(s){return (''+s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
+/* ===== DÉMARRAGE : auth + sync temps réel ===== */
+auth.onAuthStateChanged(u=>{
+  isRef=!!u; currentEmail=u?(u.email||''):'';
+  document.body.classList.toggle('readonly',!isRef);
+  renderAuthBar(); renderAll();
+  if(document.getElementById('display').classList.contains('on')) renderDisplay();
+});
+rdb.ref('teams').on('value', snap=>{
+  const v=snap.val()||{};
+  state.teams=Object.keys(v).map(id=>Object.assign({id},v[id]));
+  renderAll();
+  if(document.getElementById('display').classList.contains('on')) renderDisplay();
+}, err=>{ console.error('RTDB:',err); });
+
 document.getElementById('teamInput').addEventListener('keydown',e=>{if(e.key==='Enter')addTeam();});
-load();render();
+document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+renderAuthBar();
 </script>
 </body>
 </html>

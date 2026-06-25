@@ -1,0 +1,11 @@
+{
+  "rules": {
+    "teams": {
+      ".read": true,
+      ".write": "auth != null",
+      "$teamId": {
+        ".validate": "newData.hasChildren(['name'])"
+      }
+    }
+  }
+}
