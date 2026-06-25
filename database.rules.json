@@ -2,10 +2,19 @@
   "rules": {
     "teams": {
       ".read": true,
-      ".write": "auth != null",
-      "$teamId": {
-        ".validate": "newData.hasChildren(['name'])"
-      }
+      ".write": "auth != null"
+    },
+    "suiveur": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email == 'suiveur@festival.tn' || auth.token.email == 'admin@festival.tn')"
+    },
+    "vitesse": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email == 'vitesse@festival.tn' || auth.token.email == 'admin@festival.tn')"
+    },
+    "sumo": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email == 'sumo@festival.tn' || auth.token.email == 'admin@festival.tn')"
     }
   }
 }
