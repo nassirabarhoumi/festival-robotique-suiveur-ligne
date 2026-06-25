@@ -49,6 +49,16 @@ h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.3rem,4vw,2.2rem);font-wei
 .modal-btns button{flex:1;font-family:'Orbitron';font-weight:700;font-size:.78rem;cursor:pointer;border-radius:8px;padding:.7rem;}
 .m-login{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;border:none;}
 .m-cancel{background:transparent;border:1px solid var(--muted);color:var(--muted);}
+.modal-card.wide{width:min(94vw,520px);max-height:85vh;overflow:auto;}
+.modal-card.wide h3{font-family:'Orbitron';color:var(--accent);margin-bottom:.3rem;}
+.ltotal{font-family:'Space Mono';font-size:.82rem;color:var(--muted);margin-bottom:.6rem;}
+.lcat{font-family:'Orbitron';font-weight:700;font-size:.84rem;margin:.9rem 0 .4rem;padding:.45rem .7rem;border-radius:8px;}
+.lcat.basic{color:var(--accent);background:rgba(0,212,255,.1);}
+.lcat.advanced{color:#ff6b7a;background:rgba(255,71,87,.1);}
+.llist{margin:0 0 .4rem 1.4rem;}
+.llist li{padding:.22rem 0;font-size:.92rem;}
+.lage{font-family:'Space Mono';font-size:.64rem;color:var(--muted);}
+.lempty{color:var(--muted);font-size:.82rem;margin-left:1rem;}
 
 /* TABS */
 .tabs{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-bottom:1.4rem;}
@@ -244,6 +254,13 @@ body.readonly .ref-only{display:none!important;}
   </div>
 </div>
 
+<div id="listModal" class="modal">
+  <div class="modal-card wide">
+    <div id="listBody"></div>
+    <div class="modal-btns"><button class="m-cancel" onclick="closeList()">Fermer</button></div>
+  </div>
+</div>
+
 <div id="display" class="display">
   <div class="confetti" id="confetti"></div>
   <button class="dclose" onclick="closeDisplay()">✕ FERMER (Échap)</button>
@@ -350,6 +367,7 @@ function renderControls(){
     <select id="ageInput" class="ctrl-select ref-only">${AGES.map(a=>`<option value="${a}">${a}</option>`).join('')}</select>
     <button class="btn btn-add ref-only" onclick="addTeam()">➕ AJOUTER</button>
     <button class="btn btn-show" onclick="openDisplay()">📺 AFFICHAGE</button>
+    <button class="btn btn-ghost" onclick="openList()">📋 LISTE ÉQUIPES</button>
     <button class="btn btn-ghost ref-only" onclick="resetAll()">🗑 TOUT EFFACER</button>`;
   const ti=document.getElementById('teamInput');
   if(ti)ti.addEventListener('keydown',e=>{if(e.key==='Enter')addTeam();});
@@ -519,6 +537,21 @@ function renderAll(){
       <div class="podium">${podiumHtml(c,g.list)}</div>
       <div class="tablecard"><div class="thead ${c}">${theadHtml(c)}</div><div class="rows">${g.list.map((t,i)=>rowHtml(c,t,i)).join('')}</div></div></section>`;
   }).join('');
+}
+
+/* ===== LISTE DE VÉRIFICATION (nombre + noms par catégorie) ===== */
+function openList(){renderList();document.getElementById('listModal').classList.add('on');}
+function closeList(){document.getElementById('listModal').classList.remove('on');}
+function renderList(){
+  const c=active,list=state[c];
+  let html=`<h3>${META[c].icon} ${esc(META[c].label)}</h3><div class="ltotal">Total : <b>${list.length}</b> équipe(s)</div>`;
+  CATS.forEach(cat=>{
+    const teams=list.filter(t=>(t.cat||'Basic')===cat).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+    html+=`<div class="lcat ${cat==='Advanced'?'advanced':'basic'}">${cat==='Advanced'?'🟥':'🟦'} ${cat} — ${teams.length} équipe(s)</div>`;
+    if(!teams.length)html+=`<div class="lempty">— aucune équipe —</div>`;
+    else html+='<ol class="llist">'+teams.map(t=>`<li>${esc(t.name)} <span class="lage">${esc(t.age||'')}</span></li>`).join('')+'</ol>';
+  });
+  document.getElementById('listBody').innerHTML=html;
 }
 
 /* ===== AFFICHAGE FINAL ===== */
