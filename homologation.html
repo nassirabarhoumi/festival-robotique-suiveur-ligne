@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#0a0e1a"/>
+<title>Homologation & Appels — Festival de Robotique 1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0a0e1a;--bg3:#141c35;--accent:#00d4ff;--accent2:#ff6b35;--accent3:#7c3aed;--gold:#ffd700;--green:#00ff88;--red:#ff4757;--orange:#ff9f1c;--text:#e8eaf6;--muted:#8892b0;--card:#141c35;--border:rgba(0,212,255,.2);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;background-image:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(0,212,255,.10),transparent 70%);}
+header{text-align:center;padding:1.3rem 1rem .9rem;border-bottom:1px solid var(--border);background:rgba(10,14,26,.6);}
+.logo{width:74px;height:74px;object-fit:contain;background:#fff;border-radius:50%;padding:6px;margin-bottom:.4rem;box-shadow:0 0 26px rgba(0,212,255,.35);}
+.kicker{font-family:'Space Mono';font-size:.64rem;letter-spacing:4px;color:var(--accent2);}
+h1{font-family:'Orbitron';font-size:clamp(1.2rem,4vw,2rem);font-weight:900;margin:.3rem 0;background:linear-gradient(135deg,var(--accent),var(--accent3),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.sub{color:var(--muted);font-size:.8rem;}
+.wrap{max-width:1080px;margin:0 auto;padding:1.3rem 1rem 4rem;}
+.bar{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;align-items:center;margin-bottom:1.2rem;font-family:'Space Mono';font-size:.8rem;}
+.ab-on{color:var(--green);}.ab-off{color:var(--muted);}
+.ab-btn{font-family:'Orbitron';font-weight:700;font-size:.7rem;cursor:pointer;border-radius:8px;padding:.45rem .9rem;border:1px solid var(--accent);background:rgba(0,212,255,.12);color:var(--accent);}
+.ab-btn:hover{background:var(--accent);color:#0a0e1a;}.ab-btn.out{border-color:var(--muted);color:var(--muted);background:transparent;}
+.tabs{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:1.2rem;}
+.tab{font-family:'Orbitron';font-weight:700;font-size:.82rem;cursor:pointer;border-radius:12px;padding:.7rem 1.2rem;border:1px solid var(--border);background:var(--bg3);color:var(--muted);}
+.tab.active{color:#fff;}
+.tab.active.suiveur{background:linear-gradient(135deg,var(--accent),#0a6e8c);border-color:var(--accent);}
+.tab.active.vitesse{background:linear-gradient(135deg,var(--accent2),var(--gold));color:#0a0e1a;border-color:var(--accent2);}
+.tab.active.sumo{background:linear-gradient(135deg,var(--red),#7a1f29);border-color:var(--red);}
+
+/* JURY */
+.hcard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:1rem;}
+.hcard .hname{font-family:'Orbitron';font-weight:700;font-size:1rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.7rem;}
+.tag{font-family:'Space Mono';font-size:.58rem;padding:.12rem .5rem;border-radius:20px;font-weight:700;}
+.tag.Basic{background:rgba(0,212,255,.16);color:var(--accent);}.tag.Advanced{background:rgba(255,71,87,.16);color:#ff6b7a;}
+.tag.age{background:rgba(124,58,237,.16);color:#b794f6;}
+.seg{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.6rem;}
+.segb{font-family:'Orbitron';font-weight:700;font-size:.72rem;cursor:pointer;border-radius:8px;padding:.5rem .7rem;border:1px solid var(--border);background:transparent;color:var(--muted);}
+.segb.on.att{background:var(--orange);color:#0a0e1a;border-color:var(--orange);}
+.segb.on.val{background:var(--green);color:#0a0e1a;border-color:var(--green);}
+.segb.on.ref{background:var(--red);color:#fff;border-color:var(--red);}
+.lblrow{font-family:'Space Mono';font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:.5rem 0 .3rem;}
+.callrow{display:flex;flex-wrap:wrap;gap:.4rem;}
+.callb{font-family:'Orbitron';font-weight:700;font-size:.7rem;cursor:pointer;border-radius:8px;padding:.5rem .65rem;border:1px solid var(--accent3);background:rgba(124,58,237,.12);color:#c4b5fd;}
+.callb:hover{background:rgba(124,58,237,.3);}
+.callb.run{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.12);}
+.callb.done{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.1);}
+.callb.appel{border-color:var(--gold);color:var(--gold);background:rgba(255,215,0,.12);}
+.cmt{display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap;}
+.cmt input{flex:1;min-width:160px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.55rem .7rem;border-radius:8px;font-family:'Exo 2';font-size:.9rem;}
+.cmt button{font-family:'Orbitron';font-weight:700;font-size:.72rem;cursor:pointer;border-radius:8px;padding:.55rem .9rem;border:none;background:var(--accent);color:#0a0e1a;}
+.curr{font-family:'Space Mono';font-size:.72rem;color:var(--muted);margin-top:.5rem;}
+.curr b{color:var(--text);}
+.catsep{font-family:'Orbitron';font-weight:900;font-size:.9rem;letter-spacing:1px;margin:1.4rem 0 .8rem;padding:.5rem .9rem;border-radius:10px;}
+.catsep.basic{color:var(--accent);background:rgba(0,212,255,.1);}.catsep.advanced{color:#ff6b7a;background:rgba(255,71,87,.1);}
+
+/* COACH */
+.coachsel{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center;margin-bottom:1.2rem;}
+.coachsel select{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:.8rem 1rem;border-radius:10px;font-family:'Exo 2';font-size:.95rem;min-width:200px;}
+.notifbtn{font-family:'Orbitron';font-weight:700;font-size:.78rem;cursor:pointer;border-radius:10px;padding:.8rem 1.2rem;border:1px solid var(--gold);background:rgba(255,215,0,.12);color:var(--gold);}
+.bigcard{max-width:560px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.6rem;text-align:center;}
+.bigcard .bn{font-family:'Orbitron';font-weight:900;font-size:1.4rem;margin-bottom:.2rem;}
+.bigcard .bmeta{color:var(--muted);font-family:'Space Mono';font-size:.74rem;margin-bottom:1.2rem;}
+.statusbox{border-radius:14px;padding:1.2rem;font-family:'Orbitron';font-weight:900;font-size:1.3rem;margin-bottom:1rem;}
+.statusbox.att{background:rgba(255,159,28,.15);color:var(--orange);border:1px solid var(--orange);}
+.statusbox.val{background:rgba(0,255,136,.13);color:var(--green);border:1px solid var(--green);}
+.statusbox.ref{background:rgba(255,71,87,.13);color:#ff6b7a;border:1px solid var(--red);}
+.callbox{border-radius:14px;padding:1rem;font-family:'Orbitron';font-weight:700;font-size:1.1rem;background:rgba(124,58,237,.14);color:#c4b5fd;border:1px solid var(--accent3);margin-bottom:1rem;}
+.cmtbox{background:var(--bg);border:1px dashed var(--border);border-radius:12px;padding:.9rem;font-size:.92rem;color:var(--text);}
+.cmtbox .l{font-family:'Space Mono';font-size:.64rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:.3rem;}
+.hint{text-align:center;color:var(--muted);font-size:.82rem;margin-top:1rem;line-height:1.6;}
+
+/* MODAL + BANNER */
+.modal{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;background:rgba(5,8,16,.8);}
+.modal.on{display:flex;}
+.modal-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.8rem;width:min(92vw,360px);}
+.modal-card h3{font-family:'Orbitron';margin-bottom:.4rem;color:var(--accent);}
+.modal-card .h{font-size:.72rem;color:var(--muted);margin-bottom:1rem;font-family:'Space Mono';}
+.modal-card input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.7rem;border-radius:8px;font-size:16px;margin-bottom:.7rem;}
+.loginerr{color:var(--red);font-size:.78rem;min-height:1.1rem;margin-bottom:.5rem;font-family:'Space Mono';}
+.mbtns{display:flex;gap:.6rem;}.mbtns button{flex:1;font-family:'Orbitron';font-weight:700;font-size:.78rem;cursor:pointer;border-radius:8px;padding:.7rem;}
+.m-login{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;border:none;}.m-cancel{background:transparent;border:1px solid var(--muted);color:var(--muted);}
+#banner{position:fixed;top:0;left:0;right:0;z-index:3000;transform:translateY(-120%);transition:transform .35s;padding:1rem 1.2rem;text-align:center;font-family:'Orbitron';font-weight:900;font-size:1.05rem;color:#0a0e1a;background:var(--gold);box-shadow:0 6px 24px rgba(0,0,0,.5);}
+#banner.on{transform:translateY(0);}
+#banner small{display:block;font-family:'Space Mono';font-weight:400;font-size:.78rem;margin-top:.2rem;color:#1a1a1a;}
+.empty{text-align:center;color:var(--muted);padding:2rem;}
+</style>
+</head>
+<body>
+<header>
+  <img src="logo.png" class="logo" alt=""/>
+  <div class="kicker">FESTIVAL DE ROBOTIQUE 1.0 — LES PETITS GÉNIES</div>
+  <h1>📋 Homologation & Appels aux matchs</h1>
+  <div class="sub">Statuts d'homologation et convocations aux essais — en temps réel</div>
+</header>
+
+<div id="banner" onclick="this.classList.remove('on')"></div>
+
+<div class="wrap">
+  <div id="bar" class="bar"></div>
+  <div id="tabs" class="tabs"></div>
+  <div id="content"></div>
+</div>
+
+<div id="loginModal" class="modal">
+  <div class="modal-card">
+    <h3>🔐 Connexion jury</h3>
+    <div class="h">Jury homologation = compte de la compétition (suiveur@, vitesse@, sumo@) ou admin@.</div>
+    <input id="loginEmail" type="email" placeholder="Email" autocomplete="username"/>
+    <input id="loginPass" type="password" placeholder="Mot de passe" autocomplete="current-password"/>
+    <div id="loginErr" class="loginerr"></div>
+    <div class="mbtns"><button class="m-login" onclick="doLogin()">Se connecter</button><button class="m-cancel" onclick="closeLogin()">Annuler</button></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyAaUsubgDY6r4s5kZ1g-HNGu01zf5MGQwg",authDomain:"festival-robotique-2026.firebaseapp.com",databaseURL:"https://festival-robotique-2026-default-rtdb.firebaseio.com",projectId:"festival-robotique-2026",storageBucket:"festival-robotique-2026.firebasestorage.app",messagingSenderId:"943782180523",appId:"1:943782180523:web:19bd7d8cbecc9fc5e5a9ee"};
+firebase.initializeApp(firebaseConfig);
+const rdb=firebase.database(),auth=firebase.auth();
+
+const COMPS=['suiveur','vitesse','sumo'];
+const META={suiveur:{icon:'🏁',label:'Suiveur'},vitesse:{icon:'⚡',label:'Vitesse'},sumo:{icon:'🥊',label:'Sumo'}};
+const ROLES={'suiveur@festival.tn':'suiveur','vitesse@festival.tn':'vitesse','sumo@festival.tn':'sumo','admin@festival.tn':'all'};
+const STATUS={attente:{c:'att',t:'⏳ EN ATTENTE'},valide:{c:'val',t:'✅ VALIDÉE'},refuse:{c:'ref',t:'❌ REFUSÉE / à corriger'}};
+const CALLS={
+  appel:{cls:'appel',t:'📣 Appel au match — présentez-vous au stand !'},
+  e1_run:{cls:'run',t:'🏁 Essai 1 EN COURS'},
+  e1_done:{cls:'done',t:'✅ Essai 1 effectué'},
+  e2_run:{cls:'run',t:'🏁 Essai 2 EN COURS'},
+  e2_done:{cls:'done',t:'✅ Essai 2 effectué'},
+  e3_run:{cls:'run',t:'🚀 Essai 3 EN COURS'},
+  e3_done:{cls:'done',t:'🏆 Essai 3 effectué'}
+};
+const CALL_BTNS=[['appel','📣 Appel'],['e1_run','▶ Essai 1'],['e1_done','✅ E1 fait'],['e2_run','▶ Essai 2'],['e2_done','✅ E2 fait'],['e3_run','▶ Essai 3'],['e3_done','✅ E3 fait']];
+
+let state={suiveur:[],vitesse:[],sumo:[]};
+let userComp=null,currentEmail='',active='suiveur';
+let coachSel=null;            // {comp,id} pour le coach
+let baseline={};              // {teamId:{h:ts,c:ts}} pour ne pas notifier au 1er chargement
+let firstLoad={suiveur:true,vitesse:true,sumo:true};
+
+function canEdit(c){return userComp==='all'||userComp===c;}
+function esc(s){return (''+(s==null?'':s)).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function now(){return Date.now();}
+
+/* ===== AUTH ===== */
+function openLogin(){document.getElementById('loginModal').classList.add('on');document.getElementById('loginEmail').focus();}
+function closeLogin(){document.getElementById('loginModal').classList.remove('on');document.getElementById('loginErr').textContent='';document.getElementById('loginPass').value='';}
+function doLogin(){const e=document.getElementById('loginEmail').value.trim(),p=document.getElementById('loginPass').value,err=document.getElementById('loginErr');err.textContent='Connexion…';
+  auth.signInWithEmailAndPassword(e,p).then(()=>closeLogin()).catch(ex=>{const m={'auth/invalid-credential':'Email ou mot de passe incorrect.','auth/invalid-email':'Email invalide.','auth/missing-password':'Entrez le mot de passe.'};err.textContent='⛔ '+(m[ex.code]||ex.message);});}
+function doLogout(){if(confirm('Se déconnecter ?'))auth.signOut();}
+function renderBar(){
+  const bar=document.getElementById('bar');
+  if(userComp){const w=userComp==='all'?'toutes compétitions':(META[userComp]?META[userComp].label:userComp);
+    bar.innerHTML=`<span class="ab-on">✅ Jury : ${esc(currentEmail)} — ${esc(w)}</span> <button class="ab-btn out" onclick="doLogout()">Déconnexion</button>`;
+  }else{bar.innerHTML=`<span class="ab-off">👨‍👩‍👧 Espace coach (suivi en direct)</span> <button class="ab-btn" onclick="openLogin()">🔐 Espace jury</button>`;}
+}
+
+/* ===== TABS ===== */
+function renderTabs(){
+  document.getElementById('tabs').innerHTML=COMPS.map(c=>`<button class="tab ${c} ${c===active?'active':''}" onclick="setActive('${c}')">${META[c].icon} ${META[c].label}</button>`).join('');
+}
+function setActive(c){active=c;renderTabs();render();}
+
+/* ===== ÉCRITURES JURY ===== */
+function setStatus(c,id,st){if(!canEdit(c))return;rdb.ref(c+'/'+id).update({homolStatus:st,homolTs:now()}).catch(e=>alert(e.message));}
+function saveComment(c,id){if(!canEdit(c))return;const v=document.getElementById('cmt_'+id).value;rdb.ref(c+'/'+id).update({homolComment:v,homolTs:now()}).catch(e=>alert(e.message));}
+function setCall(c,id,call){if(!canEdit(c))return;rdb.ref(c+'/'+id).update({call:call,callTs:now()}).catch(e=>alert(e.message));}
+
+/* ===== RENDU ===== */
+function tags(t){return `<span class="tag ${t.cat||'Basic'}">${esc(t.cat||'Basic')}</span>${t.age?`<span class="tag age">${esc(t.age)}</span>`:''}`;}
+function render(){userComp?renderJury():renderCoach();}
+
+function renderJury(){
+  const c=active,cont=document.getElementById('content');
+  if(!canEdit(c)){cont.innerHTML=`<div class="empty">🔒 Tu es connecté comme arbitre <b>${esc(userComp)}</b>. Tu ne peux gérer que ta compétition. (L'admin gère les 3.)</div>`;return;}
+  const list=[...state[c]].sort((a,b)=>(a.cat||'').localeCompare(b.cat||'')||(a.age||'').localeCompare(b.age||'')||(a.name||'').localeCompare(b.name||''));
+  if(!list.length){cont.innerHTML=`<div class="empty">${META[c].icon} Aucune équipe en ${META[c].label}.</div>`;return;}
+  let html='',lastG='';
+  list.forEach(t=>{
+    const g=(t.cat||'Basic')+' · '+(t.age||'—');
+    if(g!==lastG){lastG=g;html+=`<div class="catsep ${t.cat==='Advanced'?'advanced':'basic'}">${t.cat==='Advanced'?'🟥':'🟦'} ${esc(g)}</div>`;}
+    const st=t.homolStatus||'attente';
+    const calls=CALL_BTNS.map(([k,lab])=>`<button class="callb ${CALLS[k].cls} ${t.call===k?'':''}" onclick="setCall('${c}','${t.id}','${k}')" style="${t.call===k?'outline:2px solid #fff;':''}">${lab}</button>`).join('');
+    html+=`<div class="hcard">
+      <div class="hname">${esc(t.name)} ${tags(t)}</div>
+      <div class="lblrow">Homologation</div>
+      <div class="seg">
+        <button class="segb att ${st==='attente'?'on':''}" onclick="setStatus('${c}','${t.id}','attente')">⏳ En attente</button>
+        <button class="segb val ${st==='valide'?'on':''}" onclick="setStatus('${c}','${t.id}','valide')">✅ Validé</button>
+        <button class="segb ref ${st==='refuse'?'on':''}" onclick="setStatus('${c}','${t.id}','refuse')">❌ Refusé</button>
+      </div>
+      <div class="cmt"><input id="cmt_${t.id}" placeholder="Commentaire (optionnel)…" value="${esc(t.homolComment||'')}"><button onclick="saveComment('${c}','${t.id}')">💬 Envoyer</button></div>
+      <div class="lblrow">Appel au match / essais</div>
+      <div class="callrow">${calls}</div>
+      <div class="curr">État actuel : <b>${STATUS[st].t}</b>${t.call?` · <b>${CALLS[t.call]?CALLS[t.call].t:t.call}</b>`:''}</div>
+    </div>`;
+  });
+  cont.innerHTML=html;
+}
+
+function renderCoach(){
+  const cont=document.getElementById('content');
+  const c=active,list=[...state[c]].sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  const opts=`<option value="">— choisis ton équipe —</option>`+list.map(t=>`<option value="${t.id}" ${coachSel&&coachSel.comp===c&&coachSel.id===t.id?'selected':''}>${esc(t.name)} (${esc(t.cat||'')})</option>`).join('');
+  let html=`<div class="coachsel">
+    <select onchange="selectTeam('${c}',this.value)">${opts}</select>
+    <button class="notifbtn" onclick="askNotif()">🔔 Activer les notifications</button>
+  </div>`;
+  if(coachSel&&coachSel.comp===c){
+    const t=list.find(x=>x.id===coachSel.id)||state[c].find(x=>x.id===coachSel.id);
+    if(t){
+      const st=t.homolStatus||'attente';
+      html+=`<div class="bigcard">
+        <div class="bn">${esc(t.name)}</div>
+        <div class="bmeta">${META[c].icon} ${META[c].label} · ${esc(t.cat||'')} ${t.age?'· '+esc(t.age):''}</div>
+        <div class="statusbox ${STATUS[st].c}">${STATUS[st].t}</div>
+        ${t.call?`<div class="callbox">${CALLS[t.call]?CALLS[t.call].t:esc(t.call)}</div>`:''}
+        ${t.homolComment?`<div class="cmtbox"><span class="l">Commentaire du jury</span>${esc(t.homolComment)}</div>`:''}
+      </div>
+      <div class="hint">Garde cette page <b>ouverte</b> : tu seras prévenu(e) automatiquement (bannière + son${('Notification' in window)?' + notification':''}) dès que le jury met à jour ton homologation ou t'appelle pour un essai.</div>`;
+    }
+  }else{
+    html+=`<div class="hint">Sélectionne ta compétition (onglets ci-dessus) puis <b>ton équipe</b> pour suivre ton homologation et tes appels aux essais en direct.</div>`;
+  }
+  cont.innerHTML=html;
+}
+function selectTeam(c,id){
+  if(!id){coachSel=null;render();return;}
+  coachSel={comp:c,id};
+  const t=state[c].find(x=>x.id===id);
+  baseline[id]={h:t&&t.homolTs?t.homolTs:0,c:t&&t.callTs?t.callTs:0};
+  try{localStorage.setItem('homol_sel',JSON.stringify(coachSel));}catch(e){}
+  render();
+}
+
+/* ===== NOTIFICATIONS ===== */
+function askNotif(){
+  if(!('Notification' in window)){alert('Ton navigateur ne gère pas les notifications, mais la bannière et le son fonctionneront.');return;}
+  Notification.requestPermission().then(p=>{showBanner(p==='granted'?'🔔 Notifications activées !':'Notifications refusées','La bannière et le son resteront actifs.');});
+}
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)();const o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.type='sine';o.frequency.value=880;g.gain.setValueAtTime(.25,a.currentTime);o.start();o.stop(a.currentTime+.4);}catch(e){}}
+let bTimer=null;
+function showBanner(title,sub){const b=document.getElementById('banner');b.innerHTML=esc(title)+(sub?`<small>${esc(sub)}</small>`:'');b.classList.add('on');clearTimeout(bTimer);bTimer=setTimeout(()=>b.classList.remove('on'),9000);}
+function notify(title,sub){showBanner(title,sub);beep();if('Notification' in window&&Notification.permission==='granted'){try{new Notification(title,{body:sub||'',tag:'homol'});}catch(e){}}}
+
+/* détecte les changements pour l'équipe suivie par le coach */
+function checkCoachNotify(c){
+  if(userComp||!coachSel||coachSel.comp!==c)return;
+  const t=state[c].find(x=>x.id===coachSel.id);if(!t)return;
+  const base=baseline[t.id]||{h:0,c:0};
+  if((t.homolTs||0)>base.h){const st=t.homolStatus||'attente';notify('Homologation — '+t.name,STATUS[st].t+(t.homolComment?' · '+t.homolComment:''));base.h=t.homolTs;}
+  if((t.callTs||0)>base.c){notify('Appel — '+t.name,CALLS[t.call]?CALLS[t.call].t:(t.call||''));base.c=t.callTs;}
+  baseline[t.id]=base;
+}
+
+/* ===== SYNC ===== */
+auth.onAuthStateChanged(u=>{currentEmail=u?(u.email||''):'';userComp=u?(ROLES[currentEmail.toLowerCase()]||null):null;if(userComp&&userComp!=='all'&&COMPS.includes(userComp))active=userComp;renderBar();renderTabs();render();});
+COMPS.forEach(c=>{
+  rdb.ref(c).on('value',snap=>{
+    const v=snap.val()||{};
+    state[c]=Object.keys(v).map(id=>Object.assign({id},v[id]));
+    if(firstLoad[c]){firstLoad[c]=false;if(coachSel&&coachSel.comp===c){const t=state[c].find(x=>x.id===coachSel.id);if(t)baseline[t.id]={h:t.homolTs||0,c:t.callTs||0};}}
+    else checkCoachNotify(c);
+    if(c===active)render();
+  },e=>console.error('RTDB',c,e));
+});
+try{const s=JSON.parse(localStorage.getItem('homol_sel'));if(s&&s.comp){coachSel=s;active=s.comp;}}catch(e){}
+document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+renderBar();renderTabs();render();
+</script>
+</body>
+</html>
